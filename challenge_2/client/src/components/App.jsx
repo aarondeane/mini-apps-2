@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Line } from 'react-chartjs-2';
+import { Line, Bar } from 'react-chartjs-2';
 
 
 
@@ -8,11 +8,17 @@ class App extends Component {
     super(props);
 
     this.state = {
+      value: 'Line',
       data: {},
-      options: {
-
-      }
+      options: {},
     }
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({
+      value: event.target.value
+    });
   }
 
   componentDidMount() {
@@ -27,7 +33,7 @@ class App extends Component {
         labels: Object.keys(data),
         datasets: [{
           label: "Bitcoin Price",
-          // backgroundColor: 'rgb(51, 51, 204)',
+          backgroundColor: 'rgb(51, 51, 204)',
           borderColor: 'rgb(51, 51, 204)',
           data: Object.values(data),
         }],
@@ -40,10 +46,19 @@ class App extends Component {
   }
 
   render () {
+    let chart = this.state.value === 'Line' ? <Line data={this.state.data} height={100} width={300} /> : <Bar data={this.state.data} height={100} width={300} />
+    
     return (
       <div>
         <h1>CryptoCrazy</h1>
-        <Line data={this.state.data} height={100} width={300} />
+        <label>Select Chart Type: 
+          <select value={this.state.value} onChange={this.handleChange} >
+            <option value="Line">Line</option>
+            <option value="Bar">Bar</option>
+          </select>
+        </label>
+        {chart}
+        {/* <Line data={this.state.data} height={100} width={300} /> */}
         <p>Powered by CoinDesk</p>
       </div>
     )
