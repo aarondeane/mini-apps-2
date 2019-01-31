@@ -50,12 +50,10 @@ class App extends Component {
   handleSubmit(event) {
     event.preventDefault();
     if (event.target.name === 'save') {
-      let data = {
-        description: event.target.id,
-      }
+      let data = event.target;
       console.log(data);
-      fetch('/events', {
-        method: 'PUT',
+      fetch('/saved', {
+        method: 'POST',
         body: JSON.stringify(data),
         headers: {
           'Content-Type': 'application/json'
