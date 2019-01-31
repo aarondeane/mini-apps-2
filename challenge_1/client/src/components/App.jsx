@@ -51,7 +51,6 @@ class App extends Component {
     event.preventDefault();
     if (event.target.name === 'save') {
       let data = event.target;
-      console.log(data);
       fetch('/saved', {
         method: 'POST',
         body: JSON.stringify(data),
@@ -62,7 +61,19 @@ class App extends Component {
       .then(response => console.log('Great Success!', JSON.stringify(response)))
       .catch(error => console.error('Error:', error));
     } else if (event.target.name === 'edit') {
-      console.log(event.target);
+      let data = {
+        description: event.target.id,
+        updates: event.target.value,
+      }
+      fetch('/events', {
+        method: 'PUT',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(res => res.json())
+      .then(response => console.log('Event updated', JSON.stringify(response)))
+      .catch(error => console.error('Error:', error));
     } else {
       $.ajax({
         url: `/events/?q=${this.state.search}&_start=0&_page=${this.state.currPage}`,

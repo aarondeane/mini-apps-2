@@ -16,7 +16,12 @@ server.post('/saved', (req, res, next) => {
     category2: req.body.category2,
     granularity: "year"
   }
-  console.log(req.body);
+  //TODO: Finish save route
+  res.status(200).send();
+})
+
+server.put('/events', (req, res, next) => {
+  //TODO: Finish edit route
   res.status(200).send();
 })
 
