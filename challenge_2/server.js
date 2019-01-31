@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const request = require('request');
 const mcache = require('memory-cache');
+const cryptoKey = require('./API Keys/config');
 
 const app = express();
 
@@ -29,8 +30,18 @@ const cache = (duration) => {
   };
 };
 
-app.get('/bitcoin', cache(3600), (req, res) => {
-  request.get('https://api.coindesk.com/v1/bpi/historical/close.json', (err, response, body) => {
+app.get('/bitcoin', cache(10800), (req, res) => { // Middleware is caching for 3 hrs
+  request.get(`https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym=USD&limit=30&key=${cryptoKey}`, (err, response, body) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      res.status(200).json(body);
+    }
+  });
+});
+
+app.get('/ethereum', cache(10800), (req, res) => {
+  request.get(`https://min-api.cryptocompare.com/data/histoday?fsym=ETH&tsym=USD&limit=30&key=${cryptoKey}`, (err, response, body) => {
     if (err) {
       res.status(400).send(err);
     } else {
