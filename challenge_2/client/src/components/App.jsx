@@ -9,6 +9,9 @@ class App extends Component {
 
     this.state = {
       data: {},
+      options: {
+
+      }
     }
   }
 
@@ -23,8 +26,8 @@ class App extends Component {
       let bpi = {
         labels: Object.keys(data),
         datasets: [{
-          label: "BPI",
-          backgroundColor: 'rgb(51, 51, 204)',
+          label: "Bitcoin Price",
+          // backgroundColor: 'rgb(51, 51, 204)',
           borderColor: 'rgb(51, 51, 204)',
           data: Object.values(data),
         }],
@@ -39,8 +42,9 @@ class App extends Component {
   render () {
     return (
       <div>
-        <h1>Hello from Crypto</h1>
+        <h1>CryptoCrazy</h1>
         <Line data={this.state.data} height={100} width={300} />
+        <p>Powered by CoinDesk</p>
       </div>
     )
   }
