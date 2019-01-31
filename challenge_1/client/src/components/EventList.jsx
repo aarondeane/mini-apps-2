@@ -6,7 +6,7 @@ const EventList = (props) => {
   return (
     <div>
       {events.map((event, index) => 
-        <Event key={index} event={event} />
+        <Event key={index} id={index} event={event} handleSubmit={props.handleSubmit} />
       )}
     </div>
   )

@@ -11,20 +11,16 @@ class App extends Component {
     this.state = {
       search: '',
       pageCount: 0,
-      events: [],
-      offset: 0,
       currPage: 0,
+      events: [],
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handlePageClick = this.handlePageClick.bind(this);
-
   }
   
   handleChange(event) {
-    const target = event.target;
-    const value = target.value;
-
+    const value = event.target.value;
     this.setState({
       search: value,
     })
@@ -53,22 +49,28 @@ class App extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    $.ajax({
-      url: `/events/?q=${this.state.search}&_start=0&_page=${this.state.currPage}`,
-      dataType: 'json',
-      type: 'GET',
-      success: (data, status, xhr) => {
-        this.setState({
-          events: data.slice(0, 10),
-          pageCount: Number(xhr.getResponseHeader('X-Total-Count')),
-          currPage: 1,
-        });
-      },
-
-      error: (xhr, status, err) => {
-        console.error(status, err.toString());
-      }
-    })
+    if (event.target.name === 'save') {
+      console.log(event.target);
+    } else if (event.target.name === 'edit') {
+      console.log(event.target);
+    } else {
+      $.ajax({
+        url: `/events/?q=${this.state.search}&_start=0&_page=${this.state.currPage}`,
+        dataType: 'json',
+        type: 'GET',
+        success: (data, status, xhr) => {
+          this.setState({
+            events: data.slice(0, 10),
+            pageCount: Number(xhr.getResponseHeader('X-Total-Count') / 10),
+            currPage: 1,
+          });
+        },
+  
+        error: (xhr, status, err) => {
+          console.error(status, err.toString());
+        }
+      })
+    }    
   }
 
 
@@ -76,7 +78,7 @@ class App extends Component {
     return (
       <div className="event-data">
         <Search handleChange={this.handleChange} handleSubmit={this.handleSubmit} />
-        <EventList events={this.state.events} />
+        <EventList events={this.state.events} handleSubmit={this.handleSubmit} />
         <ReactPaginate
           previousLabel={'Previous'}
           nextLabel={'Next'}
@@ -91,9 +93,8 @@ class App extends Component {
           activeClassName={'active'}
           />
       </div>
-      )
+    )
   }
-
 }
 
 export default App;

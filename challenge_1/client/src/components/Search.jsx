@@ -6,7 +6,7 @@ const Search = (props) => (
       Enter Search:
       <input type="text" onChange={props.handleChange} />
     </label>
-    <input type="submit" value="Search" />
+    <input type="submit" id="search" value="Search" />
     </form>
   )
 
