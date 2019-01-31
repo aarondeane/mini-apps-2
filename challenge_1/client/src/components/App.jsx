@@ -50,7 +50,19 @@ class App extends Component {
   handleSubmit(event) {
     event.preventDefault();
     if (event.target.name === 'save') {
-      console.log(event.target);
+      let data = {
+        description: event.target.id,
+      }
+      console.log(data);
+      fetch('/events', {
+        method: 'PUT',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(res => res.json())
+      .then(response => console.log('Great Success!', JSON.stringify(response)))
+      .catch(error => console.error('Error:', error));
     } else if (event.target.name === 'edit') {
       console.log(event.target);
     } else {
