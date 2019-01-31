@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
+import CanvasJSReact from '../canvasjs.react';
 import { Line, Bar } from 'react-chartjs-2';
+
+const CanvasJS = CanvasJSReact.CanvasJS;
+const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 class App extends Component {
   constructor(props) {
@@ -68,16 +72,6 @@ class App extends Component {
         return Number(((price.high + price.low) / 2).toFixed(2));
       })
 
-      // let data = res.map(price => {
-      //   let ohlc = {
-      //     o: price.open,
-      //     h: price.high,
-      //     l: price.low,
-      //     c: price.close,
-      //   }
-      //   return ohlc;
-      // })
-
       let eth = {
         labels: labels,
         datasets: [{
@@ -97,6 +91,22 @@ class App extends Component {
   render () {
     let btcChart = this.state.value === 'Line' ? <Line data={this.state.btcdata} height={50} width={200} /> : <Bar data={this.state.btcdata} height={50} width={200} />
     let ethChart = this.state.value === 'Line' ? <Line data={this.state.ethdata} height={50} width={200} /> : <Bar data={this.state.ethdata} height={50} width={200} />
+    const options = {
+      title: {
+        text: "BTC Canvas Chart"
+      },
+      data: [{
+        type: "column",
+        dataPoints: [
+          { label: "Apple",  y: 10  },
+          { label: "Orange", y: 15  },
+          { label: "Banana", y: 25  },
+          { label: "Mango",  y: 30  },
+          { label: "Grape",  y: 28  },
+        ]
+      }]
+    }
+
     return (
       <div>
         <h1>CryptoCrazy</h1>
@@ -108,6 +118,7 @@ class App extends Component {
         </label>
         {btcChart}
         {ethChart}
+        <CanvasJSChart options={options} />
       </div>
     )
   }
