@@ -40,6 +40,18 @@ app.get('/bitcoin', cache(10800), (req, res) => { // Middleware is caching for 3
   });
 });
 
+app.get('api/:id', cache(10800), (req, res) => { // Middleware is caching for 3 hrs
+  const cryptoSymbol = req.body;
+  console.log('Crypto to be queried: ', cryptoSymbol);
+  request.get(`https://min-api.cryptocompare.com/data/histoday?fsym=${cryptoSymbol}&tsym=USD&limit=30&key=${cryptoKey}`, (err, response, body) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      res.status(200).json(body);
+    }
+  });
+});
+
 app.get('/ethereum', cache(10800), (req, res) => {
   request.get(`https://min-api.cryptocompare.com/data/histoday?fsym=ETH&tsym=USD&limit=30&key=${cryptoKey}`, (err, response, body) => {
     if (err) {

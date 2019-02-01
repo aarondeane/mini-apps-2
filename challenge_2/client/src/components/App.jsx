@@ -1,27 +1,29 @@
 import React, { Component } from 'react';
-import CanvasJSReact from '../canvasjs.react';
-import { Line, Bar } from 'react-chartjs-2';
-
-const CanvasJS = CanvasJSReact.CanvasJS;
-const CanvasJSChart = CanvasJSReact.CanvasJSChart;
+import Chart from './Chart.jsx';
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      value: 'Line',
+      symbol: 'BTC',
+      chart: 'Line',
       btcdata: {},
       ethdata: {},
       btcOptions: {},
       ethOptions: {},
+      height: 50,
+      width: 180,
     }
     this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
     this.setState({
-      value: event.target.value
+      [name]: value,
     });
   }
 
@@ -55,7 +57,8 @@ class App extends Component {
 			  animationEnabled: true,
 			  exportEnabled: true,
         axisX: {
-          valueFormatString: "YYYY-MM-DD"
+          valueFormatString: "YYYY-MM-DD",
+          labelAngle: -50,
         },
         axisY: {
           includeZero:false,
@@ -119,7 +122,8 @@ class App extends Component {
 			  animationEnabled: true,
 			  exportEnabled: true,
         axisX: {
-          valueFormatString: "YYYY-MM-DD"
+          valueFormatString: "YYYY-MM-DD",
+          labelAngle: -50,
         },
         axisY: {
           includeZero:false,
@@ -156,35 +160,23 @@ class App extends Component {
   }
 
   render () {
-    let btcChart = <Line data={this.state.btcdata} height={50} width={200} />;
-    let ethChart = <Line data={this.state.ethdata} height={50} width={200} />;
-    switch(this.state.value) {
-      case 'Line':
-        btcChart = <Line data={this.state.btcdata} height={50} width={200} />;
-        ethChart = <Line data={this.state.ethdata} height={50} width={200} />;
-      break;
-      case 'Bar':
-        btcChart = <Bar data={this.state.btcdata} height={50} width={200} />;
-        ethChart = <Bar data={this.state.ethdata} height={50} width={200} />;
-      break;
-      case 'Candlestick':
-        btcChart = <CanvasJSChart options={this.state.btcOptions} />;
-        ethChart = <CanvasJSChart options={this.state.ethOptions} />;
-      break;
-    }
-
     return (
       <div>
         <h1>CryptoCrazy</h1>
         <label>Select Chart Type: 
-          <select value={this.state.value} onChange={this.handleChange} >
+          <select name="chart" value={this.state.chart} onChange={this.handleChange} >
             <option value="Line">Line</option>
             <option value="Bar">Bar</option>
             <option value="Candlestick">Candlestick</option>
           </select>
         </label>
-        <div className="BTC">{btcChart}</div>        
-        <div className="ETH">{ethChart}</div>
+        <label>Select Crypto Symbol: 
+          <select name="symbol" value={this.state.symbol} onChange={this.handleChange} >
+            <option value="BTC">BTC</option>
+            <option value="ETH">ETH</option>
+          </select>
+        </label>
+        <Chart state={this.state} />
       </div>
     )
   }
