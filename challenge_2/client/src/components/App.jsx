@@ -40,6 +40,41 @@ class App extends Component {
       let data = res.map(price => {
         return Number(((price.high + price.low) / 2).toFixed(2));
       })
+      let datapoints = res.map(entry => {
+        let temp = new Date(entry.time * 1000);
+        let date = new Date(temp.getFullYear()+'-'+(temp.getMonth()+1)+'-'+temp.getDate());
+        let point = {
+          x: date,
+          y: [entry.open, entry.high, entry.low, entry.close],
+        }
+        return point;
+      });
+      const options = {
+        theme: "light2", // "light1", "light2", "dark1", "dark2"
+			  animationEnabled: true,
+			  exportEnabled: true,
+        title: {
+          text: "BTC Price"
+        },
+        axisX: {
+          valueFormatString: "YYYY-MM-DD"
+        },
+        axisY: {
+          includeZero:false,
+          prefix: "$",
+          title: "Price (in USD)"
+        },
+        data: [{
+          type: "candlestick",
+          risingColor: "#00cc00",
+          fallingColor: "#ff0000",
+          showInLegend: true,
+          name: "BTC Price",
+          yValueFormatString: "$###0.00",
+          xValueFormatString: "YYYY MM DD",
+          dataPoints: datapoints,
+        }]
+      }
 
       let bpi = {
         labels: labels,
@@ -52,6 +87,7 @@ class App extends Component {
       }
       this.setState({
         btcdata: bpi,
+        options: options
       })
     })
     .catch(err => console.error('Error: ', err))
@@ -91,21 +127,6 @@ class App extends Component {
   render () {
     let btcChart = this.state.value === 'Line' ? <Line data={this.state.btcdata} height={50} width={200} /> : <Bar data={this.state.btcdata} height={50} width={200} />
     let ethChart = this.state.value === 'Line' ? <Line data={this.state.ethdata} height={50} width={200} /> : <Bar data={this.state.ethdata} height={50} width={200} />
-    const options = {
-      title: {
-        text: "BTC Canvas Chart"
-      },
-      data: [{
-        type: "column",
-        dataPoints: [
-          { label: "Apple",  y: 10  },
-          { label: "Orange", y: 15  },
-          { label: "Banana", y: 25  },
-          { label: "Mango",  y: 30  },
-          { label: "Grape",  y: 28  },
-        ]
-      }]
-    }
 
     return (
       <div>
@@ -116,9 +137,9 @@ class App extends Component {
             <option value="Bar">Bar</option>
           </select>
         </label>
+        <CanvasJSChart options={this.state.options} />
         {btcChart}
         {ethChart}
-        <CanvasJSChart options={options} />
       </div>
     )
   }
