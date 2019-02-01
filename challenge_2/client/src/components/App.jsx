@@ -13,13 +13,21 @@ class App extends Component {
       width: 180,
     }
     this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(event) {
     const target = event.target;
     const value = target.value;
     const name = target.name;
+    
+    this.setState({
+      [name]: value,
+    })
+    
+  }
 
+  handleSubmit(event) {
     fetch(`/api/${this.state.symbol}`)
     .then(response => {
       return response.json()
@@ -28,7 +36,6 @@ class App extends Component {
       res = JSON.parse(res).Data;
       
       this.setState({
-        [name]: value,
         data: res
       })
       
@@ -68,6 +75,7 @@ class App extends Component {
             <option value="BTC">BTC</option>
             <option value="ETH">ETH</option>
           </select>
+          <button type="submit" value="Submit" onClick={this.handleSubmit}>Submit</button>
         </label>
         <Chart state={this.state} />
       </div>

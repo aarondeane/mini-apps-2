@@ -30,7 +30,7 @@ const cache = (duration) => {
   };
 };
 
-app.get('/api/:id', cache(10800), (req, res) => { // Middleware is caching for 3 hrs
+app.get('/api/:id', cache(3600), (req, res) => { // Middleware is caching for 3 hrs
   const cryptoSymbol = req.params.id;
   console.log('Crypto to be queried: ', cryptoSymbol);
   request.get(`https://min-api.cryptocompare.com/data/histoday?fsym=${cryptoSymbol}&tsym=USD&limit=30&key=${cryptoKey}`, (err, response, body) => {
