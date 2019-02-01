@@ -13,7 +13,8 @@ class App extends Component {
       value: 'Line',
       btcdata: {},
       ethdata: {},
-      options: {},
+      btcOptions: {},
+      ethOptions: {},
     }
     this.handleChange = this.handleChange.bind(this);
   }
@@ -53,9 +54,6 @@ class App extends Component {
         theme: "light2", // "light1", "light2", "dark1", "dark2"
 			  animationEnabled: true,
 			  exportEnabled: true,
-        title: {
-          text: "BTC Price"
-        },
         axisX: {
           valueFormatString: "YYYY-MM-DD"
         },
@@ -87,7 +85,7 @@ class App extends Component {
       }
       this.setState({
         btcdata: bpi,
-        options: options
+        btcOptions: options
       })
     })
     .catch(err => console.error('Error: ', err))
@@ -107,6 +105,38 @@ class App extends Component {
       let data = res.map(price => {
         return Number(((price.high + price.low) / 2).toFixed(2));
       })
+      let datapoints = res.map(entry => {
+        let temp = new Date(entry.time * 1000);
+        let date = new Date(temp.getFullYear()+'-'+(temp.getMonth()+1)+'-'+temp.getDate());
+        let point = {
+          x: date,
+          y: [entry.open, entry.high, entry.low, entry.close],
+        }
+        return point;
+      });
+      const options = {
+        theme: "light1", // "light1", "light2", "dark1", "dark2"
+			  animationEnabled: true,
+			  exportEnabled: true,
+        axisX: {
+          valueFormatString: "YYYY-MM-DD"
+        },
+        axisY: {
+          includeZero:false,
+          prefix: "$",
+          title: "Price (in USD)"
+        },
+        data: [{
+          type: "candlestick",
+          risingColor: "#00cc00",
+          fallingColor: "#ff0000",
+          showInLegend: true,
+          name: "ETH Price",
+          yValueFormatString: "$###0.00",
+          xValueFormatString: "YYYY MM DD",
+          dataPoints: datapoints,
+        }]
+      }
 
       let eth = {
         labels: labels,
@@ -119,14 +149,29 @@ class App extends Component {
       }
       this.setState({
         ethdata: eth,
+        ethOptions: options
       })
     })
     .catch(err => console.error('Error: ', err))
   }
 
   render () {
-    let btcChart = this.state.value === 'Line' ? <Line data={this.state.btcdata} height={50} width={200} /> : <Bar data={this.state.btcdata} height={50} width={200} />
-    let ethChart = this.state.value === 'Line' ? <Line data={this.state.ethdata} height={50} width={200} /> : <Bar data={this.state.ethdata} height={50} width={200} />
+    let btcChart = <Line data={this.state.btcdata} height={50} width={200} />;
+    let ethChart = <Line data={this.state.ethdata} height={50} width={200} />;
+    switch(this.state.value) {
+      case 'Line':
+        btcChart = <Line data={this.state.btcdata} height={50} width={200} />;
+        ethChart = <Line data={this.state.ethdata} height={50} width={200} />;
+      break;
+      case 'Bar':
+        btcChart = <Bar data={this.state.btcdata} height={50} width={200} />;
+        ethChart = <Bar data={this.state.ethdata} height={50} width={200} />;
+      break;
+      case 'Candlestick':
+        btcChart = <CanvasJSChart options={this.state.btcOptions} />;
+        ethChart = <CanvasJSChart options={this.state.ethOptions} />;
+      break;
+    }
 
     return (
       <div>
@@ -135,11 +180,11 @@ class App extends Component {
           <select value={this.state.value} onChange={this.handleChange} >
             <option value="Line">Line</option>
             <option value="Bar">Bar</option>
+            <option value="Candlestick">Candlestick</option>
           </select>
         </label>
-        <CanvasJSChart options={this.state.options} />
-        {btcChart}
-        {ethChart}
+        <div className="BTC">{btcChart}</div>        
+        <div className="ETH">{ethChart}</div>
       </div>
     )
   }
