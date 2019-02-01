@@ -17,6 +17,7 @@ class App extends Component {
   }
 
   handleChange(event) {
+    event.preventDefault();
     const target = event.target;
     const value = target.value;
     const name = target.name;
@@ -33,7 +34,9 @@ class App extends Component {
       return response.json()
     })
     .then(res => {
-      res = JSON.parse(res).Data;
+      console.log(res);
+      res = JSON.parse(res);
+      res = res.Data;
       
       this.setState({
         data: res
@@ -49,7 +52,9 @@ class App extends Component {
       return response.json()
     })
     .then(res => {
-      res = JSON.parse(res).Data;
+      console.log(res);
+      res = JSON.parse(res);
+      res = res.Data;
       
       this.setState({
         data: res
@@ -70,7 +75,7 @@ class App extends Component {
             <option value="Candlestick">Candlestick</option>
           </select>
         </label>
-        <label>Select Crypto Symbol: 
+        <label>Select Symbol: 
           <select name="symbol" value={this.state.symbol} onChange={this.handleChange} >
             <option value="BTC">BTC</option>
             <option value="ETH">ETH</option>

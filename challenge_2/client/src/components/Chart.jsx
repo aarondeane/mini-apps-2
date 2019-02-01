@@ -54,7 +54,7 @@ const Chart = (props) => {
   let chartJSdata = {
     labels: labels,
     datasets: [{
-      label: "Bitcoin Price",
+      label: `${props.state.symbol} Price`,
       backgroundColor: 'rgb(255, 153, 0)',
       borderColor: 'rgb(0, 0, 0)',
       data: data,

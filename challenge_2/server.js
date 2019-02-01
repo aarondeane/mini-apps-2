@@ -17,7 +17,6 @@ const cache = (duration) => {
     const key = `__express__${req.originalUrl || req.url}`;
     const cachedBody = mcache.get(key);
     if (cachedBody) {
-      console.log('Cached response');
       res.send(cachedBody);
     } else {
       res.sendResponse = res.send;
@@ -32,7 +31,6 @@ const cache = (duration) => {
 
 app.get('/api/:id', cache(3600), (req, res) => { // Middleware is caching for 3 hrs
   const cryptoSymbol = req.params.id;
-  console.log('Crypto to be queried: ', cryptoSymbol);
   request.get(`https://min-api.cryptocompare.com/data/histoday?fsym=${cryptoSymbol}&tsym=USD&limit=30&key=${cryptoKey}`, (err, response, body) => {
     if (err) {
       res.status(400).send(err);
