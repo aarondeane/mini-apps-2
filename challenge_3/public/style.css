@@ -1,0 +1,15 @@
+.board {
+  display: flex;
+  flex-direction: column;
+}
+
+.board-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.score-card {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid black;
+}
